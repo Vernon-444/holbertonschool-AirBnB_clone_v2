@@ -9,7 +9,7 @@ The default value of text is is cool
 Must use option 'strict_slashes=False'
 Route /number/<n>
 """
-from flask import Flask
+from flask import Flask, render_template
 
 
 app = Flask(__name__)
@@ -65,6 +65,15 @@ def print_int(n):
     If n is an INT, prints <n> is a number
     """
     return("{} is a number".format(n))
+
+
+@app.route("/number_template/<int:n>")
+def html_int(n):
+    """
+    Displays an HTML page only if n is an integer
+    H1 tag: Number: <n> inside tag BODY
+    """
+    return render_template('5-number.html', number=n)
 
 
 if __name__ == "__main__":
