@@ -4,6 +4,8 @@ Script that starts a Flask web application listening on 0.0.0.0:5000
 Route /: display "Hello HBNB!"
 Route /hbnb: display "HBNB"
 Route /c/<text>: display "C" followed by the value of text
+Route /python/<text>: display "Python"l followd by the value of text
+The default value of text is is cool
 Must use option 'strict_slashes=False'
 """
 from flask import Flask
@@ -36,6 +38,24 @@ def c_text(text):
     """
     text = text.replace("_", " ")
     return ("C {}".format(text))
+
+
+@app.route("/python")
+def py_is_cool():
+    """
+    prints Python is cool
+    """
+    return("Python is cool")
+
+
+@app.route("/python/<text>")
+def py_text(text):
+    """
+    prints Python followed by the value of text
+    default value of text is "is cool"
+    """
+    text = text.replace("_", " ")
+    return("Python {}".format(text))
 
 
 if __name__ == "__main__":
