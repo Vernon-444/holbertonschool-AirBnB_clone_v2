@@ -13,8 +13,8 @@ from models.amenity import Amenity
 
 all_classes = {'State': State, 'City': City,
                'User': User, 'Place': Place,
-               'Review': Review, #'Amenity': Amenity
-              }
+               'Review': Review, 'Amenity': Amenity
+               }
 
 
 class DBStorage:
@@ -41,12 +41,16 @@ class DBStorage:
 
         if cls is not None:
             for obj in self.__session.query(cls).all():
-                obj_dict.update({f'{type(cls).__name__}.{obj.id}': obj})
+                name_id = "{}.{}".format(type(cls).__name__, obj.id)
+                obj_dict.update({"{}".format(name_id): obj})
+                # obj_dict.update({f'{type(cls).__name__}.{obj.id}': obj})
         else:
             for class_name in all_classes.values():
                 obj_list = self.__session.query(class_name)
                 for obj in obj_list:
-                    obj_dict.update({f'{type(obj).__name__}.{obj.id}': obj})
+                    name_id = "{}.{}".format(type(cls).__name__, obj.id)
+                    obj_dict.update({"{}".format(name_id): obj})
+                    # obj_dict.update({f'{type(obj).__name__}.{obj.id}': obj})
         return obj_dict
 
     def new(self, obj):
@@ -71,5 +75,6 @@ class DBStorage:
             sessionmaker(bind=self.__engine, expire_on_commit=False))
 
     def close(self):
-        """End attributes"""
-        self.__session.remove()
+        """Calls remove() on self.__session"""
+        if self.__session:
+            self.__session.remove()

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
+from os import getenv
 
 
 class FileStorage:
@@ -9,25 +10,21 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        """returns a dictionary
-        Return:
-            returns a dictionary of __object
-        """
+        """Returns a dictionary of models currently in storage"""
         if cls is None:
-            return self.__objects
-        class_dict = {}
-        # print("All FileStorage")
-        for key, value in self.__objects.items():
-            _class = value.__class__
-            _value = value.__class__.__name__
-            # _class = cls.__name__
-            # _obj = type(value).__name__
-            if cls == _class or cls == _value:
-                class_dict[key] = value
-        return class_dict
+            return FileStorage.__objects
+        else:
+            classDict = {}
+            for val in FileStorage.__objects.values():
+                if type(val) == cls:
+                    classDict.update({val.to_dict()['__class__'] +
+                                      '.' + val.id: val})
+            return classDict
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
+        if obj.__dict__.get('_sa_instance_state'):
+            del obj.__dict__['_sa_instance_state']
         self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
@@ -64,15 +61,13 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """This method will delete obj from __objects if it is inside,
-        if obj == NONE, method does nothing"""
+        """Deletes obj from __objects"""
         if obj is None:
-            return
-        for key, value in dict(FileStorage.__objects).items():
-            if value == obj:
+            pass
+        for key, val in dict(FileStorage.__objects).items():
+            if val == obj:
                 del FileStorage.__objects[key]
 
     def close(self):
-        """call reload method for deserializing the JSON file to objects
-        """
+        """Calls reload"""
         self.reload()
