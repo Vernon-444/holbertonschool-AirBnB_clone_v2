@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
-from os import getenv
 
 
 class FileStorage:
@@ -10,21 +9,24 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        """Returns a dictionary of models currently in storage"""
+        """
+        If cls=None, returns a dictionary of models
+        currently in storage, else returns a dictionary
+        of models with class=cls
+        """
+        # print(FileStorage.__objects)
         if cls is None:
             return FileStorage.__objects
-        else:
-            classDict = {}
-            for val in FileStorage.__objects.values():
-                if type(val) == cls:
-                    classDict.update({val.to_dict()['__class__'] +
-                                      '.' + val.id: val})
-            return classDict
+
+        cls_objects = {}
+        for value in FileStorage.__objects.values():
+            if type(value) == cls:
+                cls_objects.update({value.to_dict()['__class__'] +
+                                    '.' + value.id: value})
+        return cls_objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
-        if obj.__dict__.get('_sa_instance_state'):
-            del obj.__dict__['_sa_instance_state']
         self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
@@ -61,13 +63,16 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """Deletes obj from __objects"""
+        """deletes an object from __objects"""
         if obj is None:
-            pass
-        for key, val in dict(FileStorage.__objects).items():
-            if val == obj:
+            return
+        for key, value in dict(FileStorage.__objects).items():
+            if value == obj:
                 del FileStorage.__objects[key]
 
     def close(self):
-        """Calls reload"""
-        self.reload()
+        """
+        Method to deserialize the JSON file to objects
+        Added for task 7 of AirBnB clone - Web framework
+        """
+        return self.reload()
