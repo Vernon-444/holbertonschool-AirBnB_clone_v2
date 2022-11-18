@@ -19,7 +19,7 @@
         <DIV class="locations">
           <H3>States</H3>
           <H4>&nbsp;</H4>
-          <DIV class="popover">
+          <UL class="popover">
             <UL>
             {% for state in states.values()|sort(attribute="name") %}
               <LI><STRONG>{{ state.name }}</STRONG>
@@ -33,7 +33,7 @@
             </UL>
           </DIV>
 
-        </DIV><DIV class="amenities">
+        </DIV><DIV class="amenityList">
           <H3>Amenities</H3>
           <H4>&nbsp;</H4>
           <UL class="popover">
